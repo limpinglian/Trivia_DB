@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Trivia_DB</string>
+    <string name="tltle">Configure your option to get started</string>
+    <string name="tvCategory">Select category:</string>
+    <string name="tvDifficulty">Select Difficulty:</string>
+    <string name="tvType">Select Type:</string>
+    <string name="tvView_question_count">VIEW QUESTION COUNT</string>
+    <string name="next">Next</string>
+    <string name="question">Question</string>
+    <string name="roll_another">Roll Another</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
