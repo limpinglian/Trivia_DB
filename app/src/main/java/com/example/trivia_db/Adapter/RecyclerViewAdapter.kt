@@ -12,6 +12,7 @@ import com.example.trivia_db.Model.Question_Count
 import com.example.trivia_db.R
 
 class RecyclerViewAdapter(val countList:List<Question_Count>, val context:Context): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewAdapter.ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_questioncount, parent, false)
         return ViewHolder(view)

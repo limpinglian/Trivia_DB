@@ -18,6 +18,6 @@ interface RetrofitInterface {
     @GET
     fun getQuestion(@Url url:String):Observable<Question>
 
-    @GET
-    fun getQuestionCount(@Query("categoryId")categoryId:String):Observable<Count>
+    @GET("api_count.php?")
+    fun getQuestionCount(@Query("category")categoryId:String):Observable<Count>
 }

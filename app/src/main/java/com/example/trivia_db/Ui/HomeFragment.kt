@@ -40,10 +40,6 @@ class HomeFragment : Fragment(),HomeViewInterface {
     private var mContext: Context? = null
 
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        this.mContext = context
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val context = this.mContext
@@ -67,11 +63,10 @@ class HomeFragment : Fragment(),HomeViewInterface {
              bundle.putString("type",type.toString())
              view.findNavController().navigate(R.id.action_Proceed_to_questionFrag,bundle)
          }
-        /*var bundleCount = Bundle().apply {
-            putParcelableArrayList("LIST", List<Parcelable>(dataId))
-        }*/
+        var bundleCount = Bundle()
+        bundleCount.putStringArrayList("id",dataId)
         tvQuestionCount.setOnClickListener {
-
+            view.findNavController().navigate(R.id.action_homeFragment_to_countFragment,bundleCount)
         }
     }
 

@@ -81,6 +81,7 @@ class QuestionFragment : Fragment(),QuestionViewInterface {
         }
 
         btnRoll.setOnClickListener {
+            tvQuestion_question.text=""
             text01.text = ""
             text02.text = ""
             text03.text = ""

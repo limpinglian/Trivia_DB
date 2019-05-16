@@ -16,39 +16,47 @@ import com.example.trivia_db.Adapter.RecyclerViewAdapter
 import com.example.trivia_db.Model.Count
 import com.example.trivia_db.Model.Question_Count
 import com.example.trivia_db.MvpView.CountViewInterface
+import com.example.trivia_db.Presenter.CountPresenter
 import com.example.trivia_db.R
 import kotlinx.android.synthetic.main.question_count.*
 
 
 class CountFragment : Fragment() ,CountViewInterface{
 
-
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+var countPresenter=CountPresenter()
+    var idArr:ArrayList<String>?=null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+         idArr= arguments!!.getStringArrayList("id")
+        Log.d("All Count:",idArr.toString())
+
         return inflater.inflate(R.layout.question_count, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
-    override fun displayCount(count: Count) {
+        countPresenter.bindView(this)
+        for (i in idArr!!) {
+            countPresenter.getCount(i)
+        }
     }
 
     fun generateRecyclerView(dataList: List<Question_Count>){
+
         val adapter = RecyclerViewAdapter(dataList,context!!)
         recycler.setHasFixedSize(true)
         recycler.layoutManager = LinearLayoutManager(context!!, LinearLayout.VERTICAL, false)
         recycler.adapter = adapter
         Log.d("datalist", dataList.size.toString() + "")
     }
+    override fun displayCount(count: Count) {
+        count.category_question_count?.let {
+            generateRecyclerView(it)}
+
+        Log.d("Display",count.category_question_count!!.toString()+"")
+
+    }
+
 }
 
 
