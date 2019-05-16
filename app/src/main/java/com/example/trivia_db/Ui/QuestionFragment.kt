@@ -1,100 +1,125 @@
 package com.example.trivia_db.Ui
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.example.trivia_db.R
+import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import com.example.trivia_db.Model.Question
+import com.example.trivia_db.Model.Result
+import com.example.trivia_db.MvpView.QuestionViewInterface
+import com.example.trivia_db.Presenter.QuestionPresenter
+import kotlinx.android.synthetic.main.fragment_question.*
+import android.view.animation.AnimationUtils
+import android.widget.Toast
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [QuestionFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [QuestionFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
-class QuestionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+class QuestionFragment : Fragment(),QuestionViewInterface {
 
+
+    val BASE_URL = "https://opentdb.com/"
+    var url =
+        BASE_URL + "api.php?" + "amount=1" + "&token=9010316fb3b267b35b60ef55ae994d25d8a60d384ff38c57fde1bd4a04f7a590"
+    var questionPresenter = QuestionPresenter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+        val category = arguments?.getString("categoryID")
+        val difficulty = arguments?.getString("difficulty")
+        val type = arguments?.getString("type")
+        Log.d("get All:", category.toString() + difficulty.toString() + "")
+
+        val actionBar = (activity as AppCompatActivity).supportActionBar
+        actionBar?.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+
+
+
+        if (category != "Default") {
+            url = url + "&category=" + category
+        }
+        if (difficulty != "Default") {
+            url = url + "&difficulty=" + difficulty
+        }
+        if (type != "Any") {
+            url = url + "&type=" + type
+        }
+
+        questionPresenter.getQuestion(url)
         return inflater.inflate(R.layout.fragment_question, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // val navController= Navigation.findNavController(view)
+        // navController.navigateUp()
+        questionPresenter.bindView(this)
+        val shake = AnimationUtils.loadAnimation(context, R.anim.shake)
+        cardAnswer01.setOnClickListener{
+            Toast.makeText(context,"You are right!",Toast.LENGTH_SHORT).show();
         }
+        cardAnswer02.setOnClickListener {
+            cardAnswer02.animation=shake
+            Toast.makeText(context,"You are wrong!",Toast.LENGTH_SHORT).show();
+
+        }
+        cardAnswer03.setOnClickListener {
+            cardAnswer03.animation=shake
+            Toast.makeText(context,"You are wrong!",Toast.LENGTH_SHORT).show();
+
+        }
+        cardAnswer04.setOnClickListener {
+            cardAnswer04.animation=shake
+            Toast.makeText(context,"You are wrong!",Toast.LENGTH_SHORT).show();
+
+        }
+
+        btnRoll.setOnClickListener {
+            text01.text = ""
+            text02.text = ""
+            text03.text = ""
+            text04.text = ""
+            questionPresenter.getQuestion(url)
+        }
+
+
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
+
+    fun generateQuestion(questionList: List<Result>) {
+        for (i in questionList) {
+            tvQues_Difficulty.text = i.difficulty
+            tvQuestion_question.text = i.question
+            text01.text = i.correctAnswer
+            text02.text = i.incorrectAnswers!![0]
+            text03.text=i.incorrectAnswers!![1]
+            text04.text=i.incorrectAnswers!![2]
+
+
+
+
+        }
+
+        }
+    override fun displayQuestion(question: Question) {
+        generateQuestion(question.results)
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+    override fun showProgress() {
+        pbQuestion.visibility=View.VISIBLE
+    }
+    override fun hideProgress() {
+        pbQuestion.visibility=View.GONE
+    }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment QuestionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            QuestionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-}
+
+
+
+

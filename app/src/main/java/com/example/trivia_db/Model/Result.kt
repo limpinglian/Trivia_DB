@@ -9,16 +9,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 class Result {
 
     @JsonProperty("category")
-    private var category: String? = null
+    var category: String? = null
     @JsonProperty("type")
-    private var type: String? = null
+     var type: String? = null
     @JsonProperty("difficulty")
-    private var difficulty: String? = null
+     var difficulty: String? = null
     @JsonProperty("question")
-    private var question: String? = null
+     var question: String? = null
     @JsonProperty("correct_answer")
-    private var correctAnswer: String? = null
+     var correctAnswer: String? = null
     @JsonProperty("incorrect_answers")
-    private var incorrectAnswers: List<String>? = null
+     var incorrectAnswers: List<String>? = null
 
 }

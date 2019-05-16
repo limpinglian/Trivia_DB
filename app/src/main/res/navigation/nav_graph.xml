@@ -5,8 +5,11 @@
             app:startDestination="@id/homeFragment">
     <fragment android:id="@+id/homeFragment" android:name="com.example.trivia_db.Ui.HomeFragment"
               android:label="HomeFragment">
-        <action android:id="@+id/action_homeFragment_to_questionFragment3" app:destination="@id/questionFragment3"/>
+        <action android:id="@+id/action_Proceed_to_questionFrag" app:destination="@id/questionFragment3"/>
+        <action android:id="@+id/action_homeFragment_to_countFragment" app:destination="@id/countFragment"/>
     </fragment>
     <fragment android:id="@+id/questionFragment3" android:name="com.example.trivia_db.Ui.QuestionFragment"
               android:label="QuestionFragment"/>
+    <fragment android:id="@+id/countFragment" android:name="com.example.trivia_db.Ui.CountFragment"
+              android:label="CountFragment"/>
 </navigation>

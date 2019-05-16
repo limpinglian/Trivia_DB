@@ -1,7 +1,8 @@
 package com.example.trivia_db.Base
 
+import com.example.trivia_db.MvpView.BaseView
 import com.example.trivia_db.MvpView.PresenterInterface
-import com.example.trivia_db.MvpView.ViewInterface
+import com.example.trivia_db.MvpView.HomeViewInterface
 import com.example.trivia_db.Retrofit.RetrofitInterface
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,22 +10,25 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 
-open class BasePresenter <T: ViewInterface>: PresenterInterface<T> {
+open class BaseViewPresenter <T: BaseView>{
     private  var viewInterface :T?=null
     private var retrofit: Retrofit? = null
+    //this is wrong
     private val BASE_URL="https://opentdb.com/"
 
-    override fun attachView(viewInterface: T) {
+
+    fun bindView(viewInterface: T) {
         this.viewInterface = viewInterface
     }
 
-    fun getMvpView(): T ?{
+    fun getView(): T ?{
         return viewInterface
     }
 
-    override fun detachView() {
+    fun unBindView() {
         viewInterface=null
     }
+
 
     fun getRetrofitInstance(): RetrofitInterface {
         val client = OkHttpClient.Builder()

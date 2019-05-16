@@ -2,17 +2,22 @@ package com.example.trivia_db.Retrofit
 
 import com.example.trivia_db.Model.Categories
 import com.example.trivia_db.Model.Category
+import com.example.trivia_db.Model.Count
 import com.example.trivia_db.Model.Question
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Url
 import java.util.*
 
 interface RetrofitInterface {
-    @GET("api_category.php?&token=e5013da6222668c0d2cb4eba0eeaf1d787407f2b888408ea68e06b3e97994a44")
+    @GET("api_category.php?token=9010316fb3b267b35b60ef55ae994d25d8a60d384ff38c57fde1bd4a04f7a590/")
     fun getResponse():Observable<Categories>
 
-    @POST("https://opentdb.com/api.php?amount=1&token=e5013da6222668c0d2cb4eba0eeaf1d787407f2b888408ea68e06b3e97994a44")
-    fun getQuestion(@Query("categories")categories:String,@Query("difficulty")difficulty:String,@Query("type")type:String):Observable<Question>
+    @GET
+    fun getQuestion(@Url url:String):Observable<Question>
+
+    @GET
+    fun getQuestionCount(@Query("categoryId")categoryId:String):Observable<Count>
 }

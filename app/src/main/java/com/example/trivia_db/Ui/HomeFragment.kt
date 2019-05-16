@@ -1,108 +1,163 @@
 package com.example.trivia_db.Ui
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.navigation.findNavController
-import com.example.trivia_db.MvpView.ViewInterface
-
+import com.example.trivia_db.Model.Categories
+import com.example.trivia_db.Model.Category
+import com.example.trivia_db.MvpView.HomeViewInterface
+import com.example.trivia_db.Presenter.MainPresenter
 import com.example.trivia_db.R
 import kotlinx.android.synthetic.main.fragment_home.*
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+
+
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [HomeFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+class HomeFragment : Fragment(),HomeViewInterface {
+
+    val mainPresenter = MainPresenter()
+    val arrDifficulty = arrayOf("Default", "easy", "medium", "hard")
+    val arrType= arrayOf("Default","multiple","boolean")
+    var categoryId:String?=null
+    var difficulty:String?=null
+    var type:String?=null
+    val dataId = ArrayList<String>()
+    private var mContext: Context? = null
+
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        this.mContext = context
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-          /*  btnNext.setOnClickListener {
-            val category:String=spCategory.selectedItem.toString()
-            val difficulty:String=spDifficulty.selectedItem.toString()
-            val type:String=spType.selectedItem.toString
-
-        }*/
+        val context = this.mContext
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mainPresenter.bindView(this)
+        mainPresenter.getCategories()
+        generateDifficultySpinner()
+         generateTypeSpinner()
+        difficulty=spDifficulty.selectedItem.toString()
+        type=spType.selectedItem.toString()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+        val bundle = Bundle()
+
+         btnNext.setOnClickListener {
+             bundle.putString("categoryID",categoryId.toString())
+             bundle.putString("difficulty",difficulty.toString())
+             bundle.putString("type",type.toString())
+             view.findNavController().navigate(R.id.action_Proceed_to_questionFrag,bundle)
+         }
+        /*var bundleCount = Bundle().apply {
+            putParcelableArrayList("LIST", List<Parcelable>(dataId))
+        }*/
+        tvQuestionCount.setOnClickListener {
+
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
+    fun generateCategorySpinner(dataList: List<Category>) {
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        val data = ArrayList<String>()
+        data.add("Default")
+        for (i in dataList) {
+            i.name?.let {
+                data.add(it)
             }
+        }
+        for (i in dataList) {
+            i.id?.let {
+                dataId.add(it)
+                Log.d("dataId",dataId.toString()+"")
+            }
+        }
+
+        val array_adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, data)
+        Log.d("get categories:", data.size.toString() + "")
+        array_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spCategory.adapter = array_adapter
+
+        spCategory.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
+                 categoryId=dataList.get(position).id.toString()
+                Log.d("get id",categoryId.toString()+"")
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>){
+            }
+        }
     }
+
+    override fun displayCategory(categories: Categories) {
+        if(categories!=null){
+            categories.triviaCategory?.let {
+                generateCategorySpinner(it)
+            }
+        }
+
+
+    }
+    fun generateDifficultySpinner(){
+        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item,arrDifficulty)
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+        spDifficulty.adapter = adapter
+
+     spDifficulty.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
+                difficulty=arrDifficulty.get(position)
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>){
+            }
+        }
+    }
+    fun generateTypeSpinner(){
+        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item,arrType)
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+        spType.adapter = adapter
+
+        spType.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
+                type=arrType.get(position)
+
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>){
+            }
+        }
+    }
+    override fun showProgress() {
+        progressBar.visibility=View.VISIBLE
+    }
+    override fun hideProgress() {
+        progressBar.visibility=View.GONE
+    }
+
+
+
+
+
 }
+
