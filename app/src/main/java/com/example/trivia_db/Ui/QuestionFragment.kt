@@ -1,13 +1,18 @@
 package com.example.trivia_db.Ui
 
+import android.graphics.Color
 import android.os.Bundle
+import android.support.design.card.MaterialCardView
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.trivia_db.R
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.CardView
+import android.text.Html
 import android.util.Log
+import android.util.SparseBooleanArray
 import com.example.trivia_db.Model.Question
 import com.example.trivia_db.Model.Result
 import com.example.trivia_db.MvpView.QuestionViewInterface
@@ -17,13 +22,17 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 
 
-class QuestionFragment : Fragment(),QuestionViewInterface {
+
+
+class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
 
 
     val BASE_URL = "https://opentdb.com/"
     var url =
-        BASE_URL + "api.php?" + "amount=1" + "&token=9010316fb3b267b35b60ef55ae994d25d8a60d384ff38c57fde1bd4a04f7a590"
+        BASE_URL + "api.php?" + "amount=1" + "&token=93a6edfba47c1970df133d56d28e6ba3a48f77286e7296a002c210e68594baaa"
     var questionPresenter = QuestionPresenter()
+    private val buttonMap = SparseBooleanArray()
+    var correctAns:String?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,8 +59,8 @@ class QuestionFragment : Fragment(),QuestionViewInterface {
         if (type != "Any") {
             url = url + "&type=" + type
         }
-
         questionPresenter.getQuestion(url)
+
         return inflater.inflate(R.layout.fragment_question, container, false)
     }
 
@@ -60,32 +69,12 @@ class QuestionFragment : Fragment(),QuestionViewInterface {
         // val navController= Navigation.findNavController(view)
         // navController.navigateUp()
         questionPresenter.bindView(this)
-        val shake = AnimationUtils.loadAnimation(context, R.anim.shake)
-        cardAnswer01.setOnClickListener{
-            Toast.makeText(context,"You are right!",Toast.LENGTH_SHORT).show();
-        }
-        cardAnswer02.setOnClickListener {
-            cardAnswer02.animation=shake
-            Toast.makeText(context,"You are wrong!",Toast.LENGTH_SHORT).show();
-
-        }
-        cardAnswer03.setOnClickListener {
-            cardAnswer03.animation=shake
-            Toast.makeText(context,"You are wrong!",Toast.LENGTH_SHORT).show();
-
-        }
-        cardAnswer04.setOnClickListener {
-            cardAnswer04.animation=shake
-            Toast.makeText(context,"You are wrong!",Toast.LENGTH_SHORT).show();
-
-        }
-
+        cardAnswer01.setOnClickListener(this)
+        cardAnswer02.setOnClickListener(this)
+        cardAnswer03.setOnClickListener(this)
+        cardAnswer04.setOnClickListener(this)
         btnRoll.setOnClickListener {
-            tvQuestion_question.text=""
-            text01.text = ""
-            text02.text = ""
-            text03.text = ""
-            text04.text = ""
+            cleanUpForNextQuestion()
             questionPresenter.getQuestion(url)
         }
 
@@ -94,22 +83,42 @@ class QuestionFragment : Fragment(),QuestionViewInterface {
 
 
     fun generateQuestion(questionList: List<Result>) {
+
         for (i in questionList) {
             tvQues_Difficulty.text = i.difficulty
             tvQuestion_question.text = i.question
-            text01.text = i.correctAnswer
-            text02.text = i.incorrectAnswers!![0]
-            text03.text=i.incorrectAnswers!![1]
-            text04.text=i.incorrectAnswers!![2]
+            val listOfAnswer = ArrayList<Pair<String, Boolean>>()
+            listOfAnswer.add(Pair(i.correctAnswer!!, true))
+            i.incorrectAnswers?.forEach {
+                listOfAnswer.add(Pair(it, false))
+            }
+            listOfAnswer.shuffle()
+            cardAnswer01.setCardBackgroundColor(Color.WHITE)
+            cardAnswer02.setCardBackgroundColor(Color.WHITE)
+            cardAnswer03.setCardBackgroundColor(Color.WHITE)
+            cardAnswer04.setCardBackgroundColor(Color.WHITE)
+            cardAnswer01.visibility=View.VISIBLE
+            cardAnswer02.visibility=View.VISIBLE
+            cardAnswer03.visibility=View.VISIBLE
+            cardAnswer04.visibility=View.VISIBLE
 
-
-
+            text01.text=listOfAnswer[0].first
+            buttonMap.put(R.id.cardAnswer01, listOfAnswer[0].second)
+            text02.text=listOfAnswer[1].first
+            buttonMap.put(R.id.cardAnswer02, listOfAnswer[1].second)
+            text03.text=listOfAnswer[2].first
+            buttonMap.put(R.id.cardAnswer03, listOfAnswer[2].second)
+            text04.text=listOfAnswer[3].first
+            buttonMap.put(R.id.cardAnswer04, listOfAnswer[3].second)
 
         }
 
         }
     override fun displayQuestion(question: Question) {
+        buttonMap.clear()
+        btnRoll.isEnabled = true
         generateQuestion(question.results)
+
     }
 
     override fun showProgress() {
@@ -117,6 +126,41 @@ class QuestionFragment : Fragment(),QuestionViewInterface {
     }
     override fun hideProgress() {
         pbQuestion.visibility=View.GONE
+    }
+
+    override fun onClick(view: View?) {
+        cardAnswer01.setCardBackgroundColor(Color.WHITE)
+        cardAnswer02.setCardBackgroundColor(Color.WHITE)
+        cardAnswer03.setCardBackgroundColor(Color.WHITE)
+        cardAnswer04.setCardBackgroundColor(Color.WHITE)
+        view?.let {
+            val result = buttonMap.get(view.id)
+            val cardView = view as CardView
+            if (result) {
+                cardView.setCardBackgroundColor(resources.getColor(R.color.green))
+            } else {
+                cardView.setCardBackgroundColor(resources.getColor(R.color.colorRed))
+                cardView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake))
+
+            }
+
+        }
+
+    }
+    fun cleanUpForNextQuestion() {
+
+        cardAnswer01.visibility = View.GONE
+        cardAnswer02.visibility = View.GONE
+        cardAnswer03.visibility = View.GONE
+        cardAnswer04.visibility = View.GONE
+        btnRoll.isEnabled = false
+        pbQuestion.visibility = View.VISIBLE
+        tvQues_Difficulty.visibility = View.GONE
+        tvQuestion_question.text=""
+        text01.text = ""
+        text02.text = ""
+        text03.text = ""
+        text04.text = ""
     }
     }
 

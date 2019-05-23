@@ -11,5 +11,7 @@
     <fragment android:id="@+id/questionFragment3" android:name="com.example.trivia_db.Ui.QuestionFragment"
               android:label="QuestionFragment"/>
     <fragment android:id="@+id/countFragment" android:name="com.example.trivia_db.Ui.CountFragment"
-              android:label="CountFragment"/>
+              android:label="CountFragment">
+        <argument android:name="category" app:argType="com.example.trivia_db.Model.Categories"/>
+    </fragment>
 </navigation>

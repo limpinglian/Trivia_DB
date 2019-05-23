@@ -37,9 +37,13 @@ class HomeFragment : Fragment(),HomeViewInterface {
     var difficulty:String?=null
     var type:String?=null
     val dataId = ArrayList<String>()
+    val dataName = ArrayList<String>()
+    var bundleCount = Bundle()
+    val CountArr = ArrayList<String>()
+
     private var mContext: Context? = null
 
-
+    private var categories : Categories ?= null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val context = this.mContext
@@ -56,39 +60,39 @@ class HomeFragment : Fragment(),HomeViewInterface {
         type=spType.selectedItem.toString()
 
         val bundle = Bundle()
-
          btnNext.setOnClickListener {
              bundle.putString("categoryID",categoryId.toString())
              bundle.putString("difficulty",difficulty.toString())
              bundle.putString("type",type.toString())
              view.findNavController().navigate(R.id.action_Proceed_to_questionFrag,bundle)
          }
-        var bundleCount = Bundle()
         bundleCount.putStringArrayList("id",dataId)
+        bundleCount.putStringArrayList("categoryName",dataName)
+
+
         tvQuestionCount.setOnClickListener {
-            view.findNavController().navigate(R.id.action_homeFragment_to_countFragment,bundleCount)
+            categories?.id = dataId
+            view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToCountFragment(categories!!))
         }
     }
 
 
     fun generateCategorySpinner(dataList: List<Category>) {
 
-        val data = ArrayList<String>()
-        data.add("Default")
+
+        dataName.add("Default")
         for (i in dataList) {
             i.name?.let {
-                data.add(it)
+                dataName.add(it)
             }
-        }
-        for (i in dataList) {
             i.id?.let {
                 dataId.add(it)
-                Log.d("dataId",dataId.toString()+"")
             }
         }
 
-        val array_adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, data)
-        Log.d("get categories:", data.size.toString() + "")
+
+        val array_adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, dataName)
+        Log.d("get categories:", dataName.toString() + "")
         array_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spCategory.adapter = array_adapter
 
@@ -104,8 +108,12 @@ class HomeFragment : Fragment(),HomeViewInterface {
     }
 
     override fun displayCategory(categories: Categories) {
+
         if(categories!=null){
+            this.categories=categories
             categories.triviaCategory?.let {
+               /* CountArr.addAll(it)
+              bundleCount.putStringArrayList("",it)*/
                 generateCategorySpinner(it)
             }
         }

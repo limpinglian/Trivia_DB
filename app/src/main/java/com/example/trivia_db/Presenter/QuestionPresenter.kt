@@ -4,6 +4,7 @@ package com.example.trivia_db.Presenter
 import android.util.Log
 import com.example.trivia_db.Base.BaseViewPresenter
 import com.example.trivia_db.Model.Question
+import com.example.trivia_db.Model.Result
 import com.example.trivia_db.MvpView.BaseView
 import com.example.trivia_db.MvpView.QuestionViewInterface
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,11 +29,14 @@ class QuestionPresenter: BaseViewPresenter<QuestionViewInterface>() {
             .subscribeOn(Schedulers.io())
             .subscribe(object : DisposableObserver<Question>() {
                 override fun onNext(question: Question) {
-                    if (question != null) {
+                    if (question.results.isNotEmpty()) {
+
                         getView()?.showProgress()
                         getView()?.displayQuestion(question)
+
                         Log.d("Question:", question.toString())
-                    } else {
+                    }
+                    else {
                         Log.d("error", "is null")
                     }
                 }

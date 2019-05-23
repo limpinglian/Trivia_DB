@@ -13,50 +13,64 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.trivia_db.Adapter.RecyclerViewAdapter
+import com.example.trivia_db.Model.Category
 import com.example.trivia_db.Model.Count
 import com.example.trivia_db.Model.Question_Count
 import com.example.trivia_db.MvpView.CountViewInterface
 import com.example.trivia_db.Presenter.CountPresenter
+import com.example.trivia_db.Presenter.MainPresenter
 import com.example.trivia_db.R
+import kotlinx.android.synthetic.main.item_questioncount.*
 import kotlinx.android.synthetic.main.question_count.*
 
 
-class CountFragment : Fragment() ,CountViewInterface{
 
-var countPresenter=CountPresenter()
-    var idArr:ArrayList<String>?=null
 
+
+
+
+
+class CountFragment : Fragment() ,CountViewInterface {
+
+    var countPresenter = CountPresenter()
+    var idArr: ArrayList<String>? = null
+    var categoryArr: ArrayList<Category>? = null
+    lateinit var adapter: RecyclerViewAdapter
+    private val mergeResult = ArrayList<String>()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-         idArr= arguments!!.getStringArrayList("id")
-        Log.d("All Count:",idArr.toString())
+        val args=  CountFragmentArgs.fromBundle(arguments!!)
+        idArr = args.category.id as ArrayList<String>
+        categoryArr = args.category.triviaCategory as ArrayList<Category>
+     /*   val set = LinkedHashSet(categoryArr)
+        set.addAll(listTwo)*/
+      //  val combinedList = ArrayList(set)
 
+        Log.d("All Count:", categoryArr.toString())
+        countPresenter.bindView(this)
         return inflater.inflate(R.layout.question_count, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        countPresenter.bindView(this)
-        for (i in idArr!!) {
-            countPresenter.getCount(i)
-        }
-    }
 
-    fun generateRecyclerView(dataList: List<Question_Count>){
-
-        val adapter = RecyclerViewAdapter(dataList,context!!)
+        adapter = RecyclerViewAdapter(ArrayList(), context!!)
         recycler.setHasFixedSize(true)
         recycler.layoutManager = LinearLayoutManager(context!!, LinearLayout.VERTICAL, false)
         recycler.adapter = adapter
-        Log.d("datalist", dataList.size.toString() + "")
+
+        for (i in idArr!!) {
+            countPresenter.getCount(i)
+        }
+
     }
+
     override fun displayCount(count: Count) {
-        count.category_question_count?.let {
-            generateRecyclerView(it)}
-
-        Log.d("Display",count.category_question_count!!.toString()+"")
+       count.category_question_count?.let {
+            adapter.countList.add(it)
+           adapter.notifyDataSetChanged()
+        }
 
     }
-
 }
 
 

@@ -19,7 +19,6 @@
             android:textSize="20dp"
             android:textStyle="bold"
 
-
     />
 
         <TextView
@@ -28,8 +27,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/count_type"
                 android:paddingTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="Easy:"
                 />
         <TextView
@@ -37,18 +36,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/count_type"
-                android:layout_alignRight="@id/tvEasy"
+                android:layout_toRightOf="@id/tvEasy"
                 android:paddingTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-        />
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+               />
         <TextView
                 android:id="@+id/tvMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="Medium:"
                 android:layout_below="@id/tvEasy"/>
         <TextView
@@ -57,17 +56,18 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/count_easy"
                 android:paddingTop="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_alignRight="@id/tvMedium"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_toRightOf="@id/tvMedium"
         />
         <TextView
                 android:id="@+id/tvHard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="10dp"
                 android:text="Hard:"
                 android:layout_below="@id/tvMedium"/>
 
@@ -77,9 +77,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/count_medium"
                 android:paddingTop="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_alignRight="@id/tvHard"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="10dp"
+                android:layout_toRightOf="@id/tvHard"
         />
         <TextView
                 android:id="@+id/tvTotal"
@@ -87,6 +88,8 @@
                   android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
                 android:text="Total:"
                 android:textSize="15dp"
                 android:layout_alignParentEnd="true"/>
@@ -96,6 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvTotal"
                 android:paddingTop="15dp"
+                android:paddingRight="10dp"
                 android:textSize="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"/>

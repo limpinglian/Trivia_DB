@@ -19,14 +19,14 @@ class CountPresenter: BaseViewPresenter<CountViewInterface>() {
                 override fun onNext(count: Count) {
                     if (count != null) {
                         getView()?.displayCount(count)
-                        Log.d("Successful","" )
+                        Log.d("Successful","${count.category_id}" )
                     } else {
                         Log.d("error", "is null")
                     }
                 }
 
                 override fun onError(t: Throwable) {
-
+                    t.printStackTrace()
                 }
 
                 override fun onComplete() {
