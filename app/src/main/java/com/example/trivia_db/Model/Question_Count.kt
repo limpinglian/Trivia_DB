@@ -14,6 +14,6 @@ class Question_Count {
     @JsonProperty("total_hard_question_count")
     var hard_count:String?=null
 
-    var category : String ?= null
+    var categoryName : String ?= null
 
 }

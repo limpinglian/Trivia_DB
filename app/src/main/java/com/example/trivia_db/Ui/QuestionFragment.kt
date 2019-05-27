@@ -50,6 +50,7 @@ class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
 
 
 
+
         if (category != "Default") {
             url = url + "&category=" + category
         }
