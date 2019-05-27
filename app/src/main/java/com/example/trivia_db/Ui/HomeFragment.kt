@@ -2,7 +2,6 @@ package com.example.trivia_db.Ui
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,25 +16,17 @@ import com.example.trivia_db.Presenter.MainPresenter
 import com.example.trivia_db.R
 import kotlinx.android.synthetic.main.fragment_home.*
 import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.Toast
 
 
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-
-class HomeFragment : Fragment(),HomeViewInterface {
+class HomeFragment : Fragment(), HomeViewInterface {
 
     val mainPresenter = MainPresenter()
     val arrDifficulty = arrayOf("Default", "easy", "medium", "hard")
-    val arrType= arrayOf("Default","multiple","boolean")
-    var categoryId:String?=null
-    var difficulty:String?=null
-    var type:String?=null
+    val arrType = arrayOf("Default", "multiple", "boolean")
+    var categoryId: String? = null
+    var difficulty: String? = null
+    var type: String? = null
     val dataId = ArrayList<String>()
     val dataName = ArrayList<String>()
     var bundleCount = Bundle()
@@ -43,7 +34,7 @@ class HomeFragment : Fragment(),HomeViewInterface {
 
     private var mContext: Context? = null
 
-    private var categories : Categories ?= null
+    private var categories: Categories? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val context = this.mContext
@@ -55,19 +46,17 @@ class HomeFragment : Fragment(),HomeViewInterface {
         mainPresenter.bindView(this)
         mainPresenter.getCategories()
         generateDifficultySpinner()
-         generateTypeSpinner()
-        difficulty=spDifficulty.selectedItem.toString()
-        type=spType.selectedItem.toString()
+        generateTypeSpinner()
 
         val bundle = Bundle()
-         btnNext.setOnClickListener {
-             bundle.putString("categoryID",categoryId.toString())
-             bundle.putString("difficulty",difficulty.toString())
-             bundle.putString("type",type.toString())
-             view.findNavController().navigate(R.id.action_Proceed_to_questionFrag,bundle)
-         }
-        bundleCount.putStringArrayList("id",dataId)
-        bundleCount.putStringArrayList("categoryName",dataName)
+        btnNext.setOnClickListener {
+            bundle.putString("categoryID", categoryId.toString())
+            bundle.putString("difficulty", difficulty.toString())
+            bundle.putString("type", type.toString())
+            view.findNavController().navigate(R.id.action_Proceed_to_questionFrag, bundle)
+        }
+        bundleCount.putStringArrayList("id", dataId)
+        bundleCount.putStringArrayList("categoryName", dataName)
 
 
         tvQuestionCount.setOnClickListener {
@@ -96,70 +85,73 @@ class HomeFragment : Fragment(),HomeViewInterface {
         array_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spCategory.adapter = array_adapter
 
-        spCategory.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
-                 categoryId=dataList.get(position).id.toString()
-                Log.d("get id",categoryId.toString()+"")
+        spCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                categoryId = dataList.get(position).id.toString()
+                Log.d("get id", categoryId.toString() + "")
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>){
+            override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
     }
 
     override fun displayCategory(categories: Categories) {
 
-        if(categories!=null){
-            this.categories=categories
+        if (categories != null) {
+            this.categories = categories
             categories.triviaCategory?.let {
-               /* CountArr.addAll(it)
-              bundleCount.putStringArrayList("",it)*/
+
                 generateCategorySpinner(it)
             }
         }
 
 
     }
-    fun generateDifficultySpinner(){
-        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item,arrDifficulty)
+
+    fun generateDifficultySpinner() {
+        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, arrDifficulty)
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
         spDifficulty.adapter = adapter
 
-     spDifficulty.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
-                difficulty=arrDifficulty.get(position)
+        spDifficulty.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if (position != null) {
+                    difficulty = arrDifficulty.get(position)
+                } else {
+                    Toast.makeText(getActivity(), "Please select item", Toast.LENGTH_SHORT).show()
+                }
 
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>){
+            override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
     }
-    fun generateTypeSpinner(){
-        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item,arrType)
+
+    fun generateTypeSpinner() {
+        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, arrType)
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
         spType.adapter = adapter
 
-        spType.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
-                type=arrType.get(position)
-
+        spType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                type = arrType.get(position)
 
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>){
+            override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
     }
+
     override fun showProgress() {
-        progressBar.visibility=View.VISIBLE
+        progressBar.visibility = View.VISIBLE
     }
+
     override fun hideProgress() {
-        progressBar.visibility=View.GONE
+        progressBar.visibility = View.GONE
     }
-
-
-
 
 
 }

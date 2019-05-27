@@ -20,8 +20,7 @@ import com.example.trivia_db.Presenter.QuestionPresenter
 import kotlinx.android.synthetic.main.fragment_question.*
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-
-
+import androidx.navigation.Navigation
 
 
 class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
@@ -29,16 +28,22 @@ class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
 
     val BASE_URL = "https://opentdb.com/"
     var url =
-        BASE_URL + "api.php?" + "amount=1" + "&token=93a6edfba47c1970df133d56d28e6ba3a48f77286e7296a002c210e68594baaa"
+        BASE_URL + "api.php?" + "amount=1" + "&token=b2f462e54c5789a668e0f55dddb12ad86c7f4c11935997d3a44718d8de7f90fd"
     var questionPresenter = QuestionPresenter()
     private val buttonMap = SparseBooleanArray()
-    var correctAns:String?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        return inflater.inflate(R.layout.fragment_question, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val category = arguments?.getString("categoryID")
         val difficulty = arguments?.getString("difficulty")
         val type = arguments?.getString("type")
@@ -49,26 +54,18 @@ class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-
-
         if (category != "Default") {
             url = url + "&category=" + category
         }
         if (difficulty != "Default") {
             url = url + "&difficulty=" + difficulty
         }
-        if (type != "Any") {
+        if (type != "Default") {
             url = url + "&type=" + type
         }
         questionPresenter.getQuestion(url)
 
-        return inflater.inflate(R.layout.fragment_question, container, false)
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // val navController= Navigation.findNavController(view)
-        // navController.navigateUp()
         questionPresenter.bindView(this)
         cardAnswer01.setOnClickListener(this)
         cardAnswer02.setOnClickListener(this)
@@ -107,10 +104,15 @@ class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
             buttonMap.put(R.id.cardAnswer01, listOfAnswer[0].second)
             text02.text=listOfAnswer[1].first
             buttonMap.put(R.id.cardAnswer02, listOfAnswer[1].second)
-            text03.text=listOfAnswer[2].first
-            buttonMap.put(R.id.cardAnswer03, listOfAnswer[2].second)
-            text04.text=listOfAnswer[3].first
-            buttonMap.put(R.id.cardAnswer04, listOfAnswer[3].second)
+            if(i.type=="multiple") {
+                text03.text = listOfAnswer[2].first
+                buttonMap.put(R.id.cardAnswer03, listOfAnswer[2].second)
+                text04.text = listOfAnswer[3].first
+                buttonMap.put(R.id.cardAnswer04, listOfAnswer[3].second)
+            }else{
+                cardAnswer03.visibility = View.GONE
+                cardAnswer04.visibility = View.GONE
+            }
 
         }
 
@@ -163,6 +165,7 @@ class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
         text03.text = ""
         text04.text = ""
     }
+
     }
 
 
