@@ -12,7 +12,8 @@ import retrofit2.http.Url
 import java.util.*
 
 interface RetrofitInterface {
-    @GET("api_category.php?token=b2f462e54c5789a668e0f55dddb12ad86c7f4c11935997d3a44718d8de7f90fd/")
+
+    @GET("api_category.php?")
     fun getResponse():Observable<Categories>
 
     @GET

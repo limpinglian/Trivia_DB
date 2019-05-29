@@ -13,9 +13,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 open class BaseViewPresenter <T: BaseView>{
     private  var viewInterface :T?=null
     private var retrofit: Retrofit? = null
-    //this is wrong
-    private val BASE_URL="https://opentdb.com/"
 
+    val BASE_URL = "https://opentdb.com/"
 
     fun bindView(viewInterface: T) {
         this.viewInterface = viewInterface

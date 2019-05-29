@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/count_type"
                 android:paddingTop="15dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:text="Easy:"
                 />
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:text="Medium:"
                 android:layout_below="@id/tvEasy"/>
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="10dp"
                 android:text="Hard:"

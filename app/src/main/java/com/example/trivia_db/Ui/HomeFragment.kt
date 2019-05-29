@@ -22,8 +22,6 @@ import android.widget.Toast
 class HomeFragment : Fragment(), HomeViewInterface {
 
     val mainPresenter = MainPresenter()
-    val arrDifficulty = arrayOf("Default", "easy", "medium", "hard")
-    val arrType = arrayOf("Default", "multiple", "boolean")
     var categoryId: String? = null
     var difficulty: String? = null
     var type: String? = null
@@ -57,7 +55,6 @@ class HomeFragment : Fragment(), HomeViewInterface {
         }
         bundleCount.putStringArrayList("id", dataId)
         bundleCount.putStringArrayList("categoryName", dataName)
-
 
         tvQuestionCount.setOnClickListener {
             categories?.id = dataId
@@ -101,23 +98,21 @@ class HomeFragment : Fragment(), HomeViewInterface {
         if (categories != null) {
             this.categories = categories
             categories.triviaCategory?.let {
-
                 generateCategorySpinner(it)
             }
         }
 
-
     }
 
     fun generateDifficultySpinner() {
-        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, arrDifficulty)
+        val adapter = ArrayAdapter.createFromResource(context!!,R.array.arrDifficulty, android.R.layout.simple_spinner_item )
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
         spDifficulty.adapter = adapter
 
         spDifficulty.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if (position != null) {
-                    difficulty = arrDifficulty.get(position)
+                    difficulty = parent.getItemAtPosition(position).toString()
                 } else {
                     Toast.makeText(getActivity(), "Please select item", Toast.LENGTH_SHORT).show()
                 }
@@ -130,13 +125,13 @@ class HomeFragment : Fragment(), HomeViewInterface {
     }
 
     fun generateTypeSpinner() {
-        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, arrType)
+        val adapter = ArrayAdapter.createFromResource(context!!,R.array.arrType, android.R.layout.simple_spinner_item )
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
         spType.adapter = adapter
 
         spType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                type = arrType.get(position)
+                type=parent.getItemAtPosition(position).toString()
 
             }
 

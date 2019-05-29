@@ -21,6 +21,7 @@ import kotlin.collections.ArrayList
 
 class CountFragment : Fragment() ,CountViewInterface {
 
+
     var countPresenter = CountPresenter()
     var idArr: ArrayList<String>? = null
     var categoryArr: ArrayList<Category>? = null
@@ -60,8 +61,6 @@ class CountFragment : Fragment() ,CountViewInterface {
             countList.add(allCount)
         }
 
-        Log.d("All Count:", countList.size.toString())
-
             count.category_question_count?.let {
                 for( i in countList) {
                     if (count.category_id == i.countId) {
@@ -76,6 +75,14 @@ class CountFragment : Fragment() ,CountViewInterface {
 
         adapter.notifyDataSetChanged()
 
+    }
+    override fun showProgress() {
+        pbCount.visibility = View.VISIBLE
+
+    }
+
+    override fun hideProgress() {
+        pbCount.visibility=View.GONE
     }
 }
 

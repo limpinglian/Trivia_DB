@@ -18,6 +18,7 @@ class CountPresenter: BaseViewPresenter<CountViewInterface>() {
             .subscribe(object : DisposableObserver<Count>() {
                 override fun onNext(count: Count) {
                     if (count != null) {
+                        getView()?.showProgress()
                         getView()?.displayCount(count)
                         Log.d("Successful","${count.category_id}" )
                     } else {
@@ -30,6 +31,7 @@ class CountPresenter: BaseViewPresenter<CountViewInterface>() {
                 }
 
                 override fun onComplete() {
+                    getView()?.hideProgress()
                 }
             })
     }

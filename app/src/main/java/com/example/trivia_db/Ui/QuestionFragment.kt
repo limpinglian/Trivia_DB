@@ -21,6 +21,8 @@ import kotlinx.android.synthetic.main.fragment_question.*
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.navigation.Navigation
+import com.example.trivia_db.Base.BaseViewPresenter
+import com.example.trivia_db.MvpView.BaseView
 
 
 class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
@@ -83,8 +85,9 @@ class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
     fun generateQuestion(questionList: List<Result>) {
 
         for (i in questionList) {
-            tvQues_Difficulty.text = i.difficulty
-            tvQuestion_question.text = i.question
+            tvQues_Difficulty.text = Html.fromHtml(i.difficulty)
+            tvQuestion_question.text = Html.fromHtml(i.question)
+
             val listOfAnswer = ArrayList<Pair<String, Boolean>>()
             listOfAnswer.add(Pair(i.correctAnswer!!, true))
             i.incorrectAnswers?.forEach {
@@ -100,14 +103,14 @@ class QuestionFragment : Fragment(),QuestionViewInterface,View.OnClickListener {
             cardAnswer03.visibility=View.VISIBLE
             cardAnswer04.visibility=View.VISIBLE
 
-            text01.text=listOfAnswer[0].first
+            text01.text=Html.fromHtml(listOfAnswer[0].first)
             buttonMap.put(R.id.cardAnswer01, listOfAnswer[0].second)
-            text02.text=listOfAnswer[1].first
+            text02.text=Html.fromHtml(listOfAnswer[1].first)
             buttonMap.put(R.id.cardAnswer02, listOfAnswer[1].second)
             if(i.type=="multiple") {
-                text03.text = listOfAnswer[2].first
+                text03.text = Html.fromHtml(listOfAnswer[2].first)
                 buttonMap.put(R.id.cardAnswer03, listOfAnswer[2].second)
-                text04.text = listOfAnswer[3].first
+                text04.text =Html.fromHtml(listOfAnswer[3].first)
                 buttonMap.put(R.id.cardAnswer04, listOfAnswer[3].second)
             }else{
                 cardAnswer03.visibility = View.GONE

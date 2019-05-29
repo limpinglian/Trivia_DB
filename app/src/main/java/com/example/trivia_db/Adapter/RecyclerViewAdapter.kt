@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.trivia_db.Model.AllCount
+import com.example.trivia_db.Model.Categories
 import com.example.trivia_db.Model.Category
 import com.example.trivia_db.Model.Question_Count
 import com.example.trivia_db.R
 
-class RecyclerViewAdapter(var countList:ArrayList<AllCount>, val context:Context,var categoryList:ArrayList<Category>): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class RecyclerViewAdapter(var countList:ArrayList<AllCount>, val context:Context,var categoryList:ArrayList<Categories>): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewAdapter.ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_questioncount, parent, false)

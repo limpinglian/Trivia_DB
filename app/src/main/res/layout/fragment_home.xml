@@ -93,6 +93,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/tvDifficulty"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBottom_toTopOf="@+id/tvType"
+                        android:entries="@array/arrDifficulty"
                         app:layout_constraintStart_toStartOf="parent">
                 </Spinner>
                 <TextView
@@ -106,6 +107,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/spDifficulty"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBottom_toTopOf="@+id/spType"
+                        android:entries="@array/arrType"
                         app:layout_constraintStart_toStartOf="parent"/>
                 <Spinner
                         android:id="@+id/spType"
